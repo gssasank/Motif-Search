@@ -53,7 +53,12 @@ def check_neighbor(m1, m2):
 
 
 
+all_sub_strings = []
+
 for string in random_string_list:
     list_of_substrings = [string[i:i+L] for i in range(601-L)] # this is because, only 585 sub-strings of length 15 will exist.
-    for substring in list_of_substrings:
+    all_sub_strings.append(list_of_substrings)
+
+for i in all_sub_strings:
+    for j in i:
         pass
