@@ -14,7 +14,7 @@ for _ in range(20):
 
 
 # Algorithm for Edit Distance using dynamic programming 
-def edit_distance_dp(x, y, indel, sub):
+def edit_distance(x, y, indel, sub):
     m = len(x)
     n = len(y)
 
@@ -33,11 +33,14 @@ def edit_distance_dp(x, y, indel, sub):
 
             clap = 0 if x[i] == y[j] else sub
 
-            E[i][j] = 1 + min(E[i][j-1] + indel,        # Insert
-                                E[i-1][j] + indel,        # Remove
+            E[i][j] = 1 + min(E[i][j-1] + indel,       # Insert
+                                E[i-1][j] + indel,     # Remove
                                 E[i-1][j-1] + clap)    # Replace
 
     return(E[m][n])
+
+def check_neighbor(m1, m2):
+    return edit_distance(m1 - m2) <= D
 
 # print(random_string_list)
 
@@ -51,6 +54,6 @@ def edit_distance_dp(x, y, indel, sub):
 
 
 for string in random_string_list:
-    list_of_substrings = [string[i:i+L] for i in range(586)] # this is because, only 585 sub-strings of length 15 will exist.
+    list_of_substrings = [string[i:i+L] for i in range(601-L)] # this is because, only 585 sub-strings of length 15 will exist.
     for substring in list_of_substrings:
         pass
