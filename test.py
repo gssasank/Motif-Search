@@ -73,9 +73,9 @@ for i in range(20):
                 for sub_string_of_other_strings in l_of_sub_strings_of_other_strings:
                     if check_neighbor(sub_string, sub_string_of_other_strings):
                         counter += 1
-                        break
+                        
 
-        if counter == 19:
+        if counter > 19:
             answer_set.add(sub_string)
             print(sub_string)
 

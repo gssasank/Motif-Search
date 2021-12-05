@@ -1,12 +1,13 @@
 package com.company;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 
-     public static String stringGenerator()
-        {
+    public static String stringGenerator(){
 
             String alphabet = "ACGT";
             StringBuilder sb = new StringBuilder();
@@ -18,10 +19,8 @@ public class Main {
                 char randomChar = alphabet.charAt(index);
                 sb.append(randomChar);
             }
-
             return(sb.toString());
-
-        }
+     }
 
     public static String slice_range(String s, int startIndex, int endIndex) {
         if (startIndex < 0) startIndex = s.length() + startIndex;
@@ -71,17 +70,26 @@ public class Main {
          return(editDistance(m1, m2, indel, sub) <= D);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 	// write your code here
 
-        int L = 15;
-        int D = 5;
-        int indel = 1;
-        int sub = 1;
+        Scanner inFile = new Scanner(new FileReader("Data.txt"));
+
+        int L = inFile.nextInt();
+        int D = inFile.nextInt();
+        int indel = inFile.nextInt();
+        int sub = inFile.nextInt();
 
         ArrayList<String> randomStringList = new ArrayList<>();
         ArrayList<ArrayList<String>> allSubStrings = new ArrayList<>();
         ArrayList<String> answerList = new ArrayList<>();
+
+        System.out.println("The value of L is " + L + " and the value of D is " + D);
+        System.out.println("The value of indel is " + indel + " and the value of sub is " +sub);
+        System.out.println("The program typically takes 3-4 minutes to execute.");
+        System.out.println("The number of strings varies from around 20 to around 60.");
+        System.out.println("The final output will be available in Out.txt after the execution.");
+        System.out.println("Printing the string values as they are found:");
 
         for(int i = 0; i < 20 ; i++){
             randomStringList.add(stringGenerator());
@@ -97,11 +105,8 @@ public class Main {
             allSubStrings.add(listOfSubstrings);
         }
 
-        // The main logic
 
         for(int i = 0; i < 20; i++ ){
-            System.out.println("In the first loop");
-            System.out.println(i);
 
             ArrayList<String> loss;
             loss = allSubStrings.get(i);
@@ -115,12 +120,12 @@ public class Main {
                         lossos = allSubStrings.get(j);
 
                         for(String soss: lossos){
-                            int tempCount = 0;
+                            boolean flag = false;
                             if(checkNeighbor(subString, soss, indel, sub, D)){
                                 counter++;
-                                tempCount++;
+                                flag = true;
                             }
-                            if(tempCount == 1){
+                            if(flag){
                                 break;
                             }
                         }
@@ -133,6 +138,24 @@ public class Main {
                 }
             }
         }
-        System.out.println(answerList.size());
+
+//        for(String sequence: answerList){
+//            System.out.println(sequence);
+//        }
+
+        System.out.println("The number of strings is " + answerList.size());
+
+        // Code to print output to Out.txt after printing to console
+
+        PrintStream o = new PrintStream("Out.txt");
+        System.setOut(o);
+
+        for(String sequence: answerList){
+            System.out.println(sequence);
+        }
+
+        System.out.println("the number of strings: " + answerList.size());
+
+
     }
 }
