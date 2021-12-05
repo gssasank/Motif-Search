@@ -21,45 +21,56 @@ def edit_distance(x, y, indel, sub):
     # Create a table to store results of subproblems
     E = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
 
-    for i in range(m+1):
-        E[i][0] = i 
+    # for i in range(m+1):
+    #     E[i][0] = i 
 
-    for j in range(n+1):
-        E[0][j] = j
+    # for j in range(n+1):
+    #     E[0][j] = j
 
 
     for i in range(m + 1):
         for j in range(n + 1):
 
-            clap = 0 if x[i] == y[j] else sub
+            if i == 0:
+                E[i][j] = j
+            
+            elif j == 0:
+                E[i][j] = i
+            
+            else:
+                clap = 0 if x[i-1] == y[j-1] else sub
 
-            E[i][j] =     min(E[i][j-1] + indel,       # Insert
-                                E[i-1][j] + indel,     # Remove
-                                E[i-1][j-1] + clap)    # Replace
+                E[i][j] =     min(E[i][j-1] + indel,       # Insert
+                                    E[i-1][j] + indel,     # Remove
+                                    E[i-1][j-1] + clap)    # Replace
 
     return(E[m][n])
 
 def check_neighbor(m1, m2):
     return edit_distance(m1, m2, 1, 1) <= D
 
-# print(random_string_list)
-
-# Given to you are integers L and D and the alphabet set Σ{A,C,G,T}. Write a program to implement the following:
-# Randomly generate 20 strings S1, S2 … S20 of length 600 each using alphabet set Σ.
-# For each string i from 1 … 20
-#   For each substring M in string Si, where |M| = L:
-#       If a neighbor of M occurs in each of the other 19 strings, then output M;
-#           where a string M’ is considered as a Neighbor of M if Edit distance (M, M’) <= D.
-
-
 
 all_sub_strings = []
+answer_array = []
 
 for string in random_string_list:
     list_of_substrings = [string[i:i+L] for i in range(601-L)] # this is because, only 585 sub-strings of length 15 will exist.
     all_sub_strings.append(list_of_substrings)
 
 for i in range(20):
+    print("In the first loop again!" , i)
     l_of_sub_strings = all_sub_strings[i]
-    for j in l_of_sub_strings:
-        
+    for sub_string in l_of_sub_strings:
+        counter = 0
+        for j in range(20):
+            if i != j:
+                l_of_sub_strings_of_other_strings = all_sub_strings[j]
+                for sub_string_of_other_strings in l_of_sub_strings_of_other_strings:
+                    if check_neighbor(sub_string, sub_string_of_other_strings):
+                        counter += 1
+
+        if counter == 19:
+            answer_array.append(sub_string)
+            print(sub_string)
+
+print("Number of Sub-Strings: ", len(answer_array))
