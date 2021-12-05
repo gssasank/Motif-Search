@@ -40,7 +40,7 @@ def edit_distance(x, y, indel, sub):
     return(E[m][n])
 
 def check_neighbor(m1, m2):
-    return edit_distance(m1 - m2) <= D
+    return edit_distance(m1, m2, 1, 1) <= D
 
 # print(random_string_list)
 
