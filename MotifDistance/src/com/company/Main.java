@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -83,11 +84,12 @@ public class Main {
         ArrayList<String> randomStringList = new ArrayList<>();
         ArrayList<ArrayList<String>> allSubStrings = new ArrayList<>();
         ArrayList<String> answerList = new ArrayList<>();
+        ArrayList<ArrayList<String>> allContainer = new ArrayList<>();
 
         System.out.println("The value of L is " + L + " and the value of D is " + D);
         System.out.println("The value of indel is " + indel + " and the value of sub is " +sub);
-        System.out.println("The program typically takes 3-4 minutes to execute.");
-        System.out.println("The number of strings varies from around 20 to around 60.");
+//        System.out.println("The program typically takes 3-4 minutes to execute.");
+//        System.out.println("The number of strings varies from around 20 to around 60.");
         System.out.println("The final output will be available in Out.txt after the execution.");
         System.out.println("Printing the string values as they are found:");
 
@@ -105,6 +107,24 @@ public class Main {
             allSubStrings.add(listOfSubstrings);
         }
 
+        for(String string: randomStringList){
+            ArrayList<String> listOfSubstrings = new ArrayList<>();
+            for(int i = (L-D); i <= (L+D); i++){
+                for (int j = 0; j <= (600-i); j++){
+                    int temp = j + i ;
+                    String blip = slice_range(string, j, temp);
+                    listOfSubstrings.add(blip);
+                }
+            }
+            allContainer.add(listOfSubstrings);
+        }
+
+//        System.out.println(allContainer.get(1));
+
+//        for(String list: allContainer.get(1)){
+//            System.out.println(list);
+//
+//        }
 
         for(int i = 0; i < 20; i++ ){
 
@@ -117,7 +137,7 @@ public class Main {
 
                     if(i != j){
                         ArrayList<String> lossos;
-                        lossos = allSubStrings.get(j);
+                        lossos = allContainer.get(j);
 
                         for(String soss: lossos){
                             boolean flag = false;
@@ -138,10 +158,6 @@ public class Main {
                 }
             }
         }
-
-//        for(String sequence: answerList){
-//            System.out.println(sequence);
-//        }
 
         System.out.println("The number of strings is " + answerList.size());
 
