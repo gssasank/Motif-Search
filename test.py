@@ -6,6 +6,9 @@ req_set  = ("A","C","G","T")
 L = 15
 D = 5
 
+indel = 1
+sub = 1
+
 random_string_list = []
 
 for _ in range(20):
@@ -42,20 +45,22 @@ def edit_distance(x, y, indel, sub):
 
                 E[i][j] =     min(E[i][j-1] + indel,       # Insert
                                     E[i-1][j] + indel,     # Remove
-                                    E[i-1][j-1] + clap)    # Replace
+                                    
+                                    )    # Replace
 
     return(E[m][n])
 
 def check_neighbor(m1, m2):
-    return edit_distance(m1, m2, 1, 1) <= D
+    return edit_distance(m1, m2, indel, sub) <= D
 
 
 all_sub_strings = []
-answer_array = []
+answer_set = set()
 
 for string in random_string_list:
     list_of_substrings = [string[i:i+L] for i in range(601-L)] # this is because, only 585 sub-strings of length 15 will exist.
     all_sub_strings.append(list_of_substrings)
+
 
 for i in range(20):
     print("In the first loop again!" , i)
@@ -68,9 +73,10 @@ for i in range(20):
                 for sub_string_of_other_strings in l_of_sub_strings_of_other_strings:
                     if check_neighbor(sub_string, sub_string_of_other_strings):
                         counter += 1
+                        break
 
         if counter == 19:
-            answer_array.append(sub_string)
+            answer_set.add(sub_string)
             print(sub_string)
 
-print("Number of Sub-Strings: ", len(answer_array))
+print("Number of Sub-Strings: ", len(answer_set))  

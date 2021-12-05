@@ -35,6 +35,6 @@ int main()
 
     
 
-   cout << randomStringList[1] << endl;
+   cout << createRandomString() << endl;
    return 0;
 }
