@@ -33,7 +33,7 @@ def edit_distance(x, y, indel, sub):
 
             clap = 0 if x[i] == y[j] else sub
 
-            E[i][j] = 1 + min(E[i][j-1] + indel,       # Insert
+            E[i][j] =     min(E[i][j-1] + indel,       # Insert
                                 E[i-1][j] + indel,     # Remove
                                 E[i-1][j-1] + clap)    # Replace
 
@@ -59,6 +59,7 @@ for string in random_string_list:
     list_of_substrings = [string[i:i+L] for i in range(601-L)] # this is because, only 585 sub-strings of length 15 will exist.
     all_sub_strings.append(list_of_substrings)
 
-for i in all_sub_strings:
-    for j in i:
-        pass
+for i in range(20):
+    l_of_sub_strings = all_sub_strings[i]
+    for j in l_of_sub_strings:
+        
