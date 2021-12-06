@@ -20,9 +20,11 @@ public class Main {
             return(sb.toString());
      }
 
-    public static String slice_range(String s, int startIndex, int endIndex) {
-        if (startIndex < 0) startIndex = s.length() + startIndex;
-        if (endIndex < 0) endIndex = s.length() + endIndex;
+    public static String sliceRange(String s, int startIndex, int endIndex) {
+        if (startIndex < 0)
+            startIndex = s.length() + startIndex;
+        if (endIndex < 0)
+            endIndex = s.length() + endIndex;
         return s.substring(startIndex, endIndex);
     }
 
@@ -32,32 +34,21 @@ public class Main {
 
          int[][] E = new int[m+1][n+1];
 
-        for(int i=0; i<=m; i++) {
-            for(int j=0; j<=n; j++) {
-                E[i][j] = 0;
-            }
-        }
-
         for(int i = 0; i <= m; i++){
             for(int j = 0; j <= n; j++){
 
-                if(i == 0){
+                if(i == 0)
                     E[i][j] = j;
-                }
 
-                else if(j == 0){
+                else if(j == 0)
                     E[i][j] = i;
-                }
 
                 else{
                     int clap = 0;
-
-                    if(x.charAt(i-1) != y.charAt(j-1)){
+                    if(x.charAt(i-1) != y.charAt(j-1))
                         clap = sub;
-                    }
 
                     E[i][j] = Math.min((E[i][j-1]+indel), Math.min((E[i-1][j]+indel), E[i-1][j-1] + clap) );
-
                 }
             }
         }
@@ -69,8 +60,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-	// write your code here
 
+        // Input taken from file
         Scanner inFile = new Scanner(new FileReader("Data.txt"));
 
         int L = inFile.nextInt();
@@ -85,8 +76,6 @@ public class Main {
 
         System.out.println("The value of L is " + L + " and the value of D is " + D);
         System.out.println("The value of indel is " + indel + " and the value of sub is " +sub);
-//        System.out.println("The program typically takes 3-4 minutes to execute.");
-//        System.out.println("The number of strings varies from around 20 to around 60.");
         System.out.println("The final output will be available in Out.txt after the execution.");
         System.out.println("Printing the string values as they are found:");
 
@@ -98,7 +87,7 @@ public class Main {
             ArrayList<String> listOfSubstrings = new ArrayList<>();
             for(int i = 0; i <= (600-L); i++){
                 int temp = i + L ;
-                String blip = slice_range(string, i, temp);
+                String blip = sliceRange(string, i, temp);
                 listOfSubstrings.add(blip);
             }
             allSubStrings.add(listOfSubstrings);
@@ -109,46 +98,34 @@ public class Main {
             for(int i = (L-D); i <= (L+D); i++){
                 for (int j = 0; j <= (600-i); j++){
                     int temp = j + i ;
-                    String blip = slice_range(string, j, temp);
+                    String blip = sliceRange(string, j, temp);
                     listOfSubstrings.add(blip);
                 }
             }
             allContainer.add(listOfSubstrings);
         }
 
-//        System.out.println(allContainer.get(1));
-
-//        for(String list: allContainer.get(1)){
-//            System.out.println(list);
-//
-//        }
 
         for(int i = 0; i < 20; i++ ){
-
             ArrayList<String> loss;
             loss = allSubStrings.get(i);
-
             for(String subString : loss){
                 int counter = 0;
                 for(int j = 0; j < 20; j++ ){
-
                     if(i != j){
                         ArrayList<String> lossos;
                         lossos = allContainer.get(j);
-
                         for(String soss: lossos){
                             boolean flag = false;
                             if(checkNeighbor(subString, soss, indel, sub, D)){
                                 counter++;
                                 flag = true;
                             }
-                            if(flag){
+                            if(flag)
                                 break;
-                            }
                         }
                     }
                 }
-
                 if(counter == 19){
                     System.out.println(subString);
                     answerList.add(subString);
@@ -167,7 +144,7 @@ public class Main {
             System.out.println(sequence);
         }
 
-        System.out.println("the number of strings: " + answerList.size());
+        System.out.println("The number of strings is " + answerList.size());
 
 
     }
