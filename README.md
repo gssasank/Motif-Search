@@ -1,6 +1,6 @@
 # **DAA ASSIGNMENT**
 
-# **ABSTRACT:**
+## **ABSTRACT:**
 
 Motifs, also known as Transcription Factor Binding Sites, are biological patterns of great interest. Motif Search algorithms identify the conserved motifs within a given set of DNA sequences. There are different versions of Motif Search Problem, such as Simple Motif Search, Planted Motif Search, Edited Motif Search, Quorum Motif Search. In this exercise, you are supposed to solve a simplified version of Edit-distance based Motif Search.
 
@@ -11,15 +11,15 @@ Given to you are integers L and D and the alphabet set Σ {A, C, G, T}. Write a 
 - Randomly generate 20 strings S1, S2 … S20 of length 600 each using alphabet set Σ.
 - For each string i from 1 … 20:
   - For each substring M in string Si, where |M| = L:
-    - If a neighbour of M occurs in each of the other 19 strings, then output M; where a string M&#39; is considered as a Neighbour of M if Edit distance (M, M&#39;) \&lt;= D.
+    - If a neighbour of M occurs in each of the other 19 strings, then output M; where a string M&#39; is considered as a Neighbour of M if Edit distance (M, M') <= D.
 
-# **DIRECTIONS FOR RUNNING THE PROGRAM:**
+## **DIRECTIONS FOR RUNNING THE PROGRAM:**
 
 The program file is named Main.java, the file containing the input data is named Data.txt and the file containing the output data is named Out.txt. Make sure that the Data.txt file is in the same directory as the Main.java file. The output is printed into the console as the matching strings are found and when the execution of the program is finished, the Out.txt file is populated with the matching strings.
 
 The Data.txt file should have four integers separated by spaces, in the specified order: L D indel sub.
 
-# **EDIT DISTANCE:**
+## **EDIT DISTANCE:**
 
 **Definition of Edit Distance:**
 
@@ -37,29 +37,117 @@ It was given that both insertion and deletion have the same cost and that is rep
 
 The second method is by using **Dynamic Programming.** For that we need to initialize a matrix E[0…p][0…q], where E[i, j] represents the number of transformations required to convert X[1...i] to Y[1…j]. The value at E[p, q] will give you the Edit Distance. Using the algorithm mentioned in the question, the function to calculate Edit Distance is as follows:
 
-![](RackMultipart20211206-4-182ub09_html_5eece0241fc6ddf3.png)
+```Java
+public static int editDistance(String x, String y, int indel, int sub){
+         int m = x.length();
+         int n = y.length();
+
+         int[][] E = new int[m+1][n+1];
+
+        for(int i = 0; i <= m; i++){
+            for(int j = 0; j <= n; j++){
+
+                if(i == 0)
+                    E[i][j] = j;
+
+                else if(j == 0)
+                    E[i][j] = i;
+
+                else{
+                    int clap = 0;
+                    if(x.charAt(i-1) != y.charAt(j-1))
+                        clap = sub;
+
+                    E[i][j] = Math.min((E[i][j-1]+indel), Math.min((E[i-1][j]+indel), E[i-1][j-1] + clap) );
+                }
+            }
+        }
+        return(E[m][n]);
+    }
+```
 
 As you can see, the above Java method takes the two strings it is comparing (x and y) as the input along with the value of _indel_ and _sub_. The worst-case time complexity of this algorithm would be **O(m\*n)**.
 
-# **THE MAIN METHOD:**
+## **THE MAIN METHOD:**
 
-![](RackMultipart20211206-4-182ub09_html_2de160cb9f01dba.png)
+```Java
+ // Input taken from file
+        Scanner inFile = new Scanner(new FileReader("Data.txt"));
+
+        int L = inFile.nextInt();
+        int D = inFile.nextInt();
+        int indel = inFile.nextInt();
+        int sub = inFile.nextInt();
+```
 
 The first few lines of the Main method were to take the input from Data.txt file and to assign the values to the respective variables.
 
-![](RackMultipart20211206-4-182ub09_html_5a5ebfb71c699ad4.png)
+```Java
+        for(int i = 0; i < 20 ; i++){
+            randomStringList.add(stringGenerator());
+        }
+```
 
 Using the self-defined stringGenerator() method, 20 random strings of length 600, containing the letters A, C, G and T were generated.
 
-![](RackMultipart20211206-4-182ub09_html_96a2b6d1c2c62205.png)
+```Java
+        for (String string: randomStringList){
+            ArrayList<String> listOfSubstrings = new ArrayList<>();
+            for(int i = 0; i <= (600-L); i++){
+                int temp = i + L ;
+                String blip = sliceRange(string, i, temp);
+                listOfSubstrings.add(blip);
+            }
+            allSubStrings.add(listOfSubstrings);
+}
+```
 
 Each of the 600-character strings were split into sub-strings of length L and all these new sub-strings were stored in an ArrayList called allSubStrings. For example, as given in the question when L = 15, all the sub-strings in the ArrayLists are of length 15.
 
-![](RackMultipart20211206-4-182ub09_html_f266d7e6c279d476.png)
+```Java
+for(String string: randomStringList){
+            ArrayList<String> listOfSubstrings = new ArrayList<>();
+            for(int i = (L-D); i <= (L+D); i++){
+                for (int j = 0; j <= (600-i); j++){
+                    int temp = j + i ;
+                    String blip = sliceRange(string, j, temp);
+                    listOfSubstrings.add(blip);
+                }
+            }
+            allContainer.add(listOfSubstrings);
+        }
+```
 
 A second ArrayList named allContainer is created and it contains 20 ArrayLists of sub-strings of lengths L-D to L+D. For example, when we consider L = 15 and D = 5, the length of sub-strings stored in the ArrayLists range from 10 to 20.
 
-![](RackMultipart20211206-4-182ub09_html_f9828b3cd1bc53c7.png)
+```Java
+for(int i = 0; i < 20; i++ ){
+            ArrayList<String> loss;
+            loss = allSubStrings.get(i);
+            for(String subString : loss){
+                int counter = 0;
+                for(int j = 0; j < 20; j++ ){
+                    if(i != j){
+                        ArrayList<String> lossos;
+                        lossos = allContainer.get(j);
+                        for(String soss: lossos){
+                            boolean flag = false;
+                            if(checkNeighbor(subString, soss, indel, sub, D)){
+                                counter++;
+                                flag = true;
+                            }
+                            if(flag)
+                                break;
+                        }
+                    }
+                }
+                if(counter == 19){
+                    System.out.println(subString);
+                    answerList.add(subString);
+                }
+            }
+        }
+```
 
 This is the core logic of the program. For every string of length L, corresponding to the 600-character random string i.e., for every string in allSubStrings, we compare them with every sub-string in allContainer, i.e., every sub-string of length L-D to L+D. The loop goes on until the indices of the ArrayLists are unequal. This is because, when the indices of the ArrayLists are equal, then that iteration is skipped as we only want to check the neighbours.
 
@@ -67,23 +155,62 @@ Then, the checkNeighbor() method is used to check whether or not the edit distan
 
 The worst-case time complexity of this part is **O(n****2 ****\*m**** 2****\*n\*m)**. The n2 component is for the first two loops, the m2 component is for the second two loops. The n\*m component is of the edit distance function. Roughly, we can assume the time complexity to me of the order O(n6).
 
-![](RackMultipart20211206-4-182ub09_html_127c710a078312e6.png)
+```Java
+// Code to print output to Out.txt after printing to console
+
+        PrintStream o = new PrintStream("Out.txt");
+        System.setOut(o);
+
+        for(String sequence: answerList){
+            System.out.println(sequence);
+        }
+
+        System.out.println("The number of strings is " + answerList.size());
+```
 
 This part of the code is responsible for printing the output in Out.txt. Once the execution of the program is finished, if a file named Out.txt does not exist, it is created and then written to and if it does exist, it is directly written to. Each string that has a neighbour is printed along with the total number of strings found to be matching.
 
-![](RackMultipart20211206-4-182ub09_html_3a93b4ad67890fa1.png)
+```
+GCTACTCATAGGTTA
+CTATTTCATGAGTAC
+CGACGAGCTCTGATC
+TGTCGTACTCCAGAG
+CGCTCGACTAGCTAG
+CATAGCTTGTCAGCG
+ATAGCTTGTCAGCGA
+The number of strings is 7
+```
 
 Apart from the writing the output to the file, the matching strings are also directly printed to the console as they are found, along with the entered values of L, D, indel, sub. The above is output for 15 5 1 2.
 
-![](RackMultipart20211206-4-182ub09_html_4b146e75133d80d1.png)
+```Java
+public static String stringGenerator(){
+
+            String alphabet = "ACGT";
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+            int length = 600;
+
+            for(int i = 0; i < length; i++) {
+                int index = random.nextInt(alphabet.length());
+                char randomChar = alphabet.charAt(index);
+                sb.append(randomChar);
+            }
+            return(sb.toString());
+     }
+```
 
 This is the Java method used to generate random strings of length 600, containing the letters A, C, G, and T.
 
-![](RackMultipart20211206-4-182ub09_html_71270bab5b660ebc.png)
+```Java
+    public static boolean checkNeighbor(String m1, String m2, int indel, int sub, int D){
+         return(editDistance(m1, m2, indel, sub) <= D);
+    }
+```
 
 This is the Java method used to check whether two given strings are neighbours or not.
 
-# **POTENTIAL IMPROVEMENTS:**
+## **POTENTIAL IMPROVEMENTS:**
 
 This approach has massive room for improvement. The worst-case time complexity and space complexity for finding the edit distance is O(m\*n). The quadratic space used to store the dynamic programming table (in our case it is E) can be dramatically improved. One way to improve the space complexity to around O(m) is by using a divide and conquer algorithm.
 
