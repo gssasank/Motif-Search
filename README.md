@@ -1,4 +1,4 @@
-# **DAA ASSIGNMENT**
+# **MOTIF SEARCH**
 
 ## **ABSTRACT:**
 
