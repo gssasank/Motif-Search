@@ -4,7 +4,7 @@
 
 Motifs, also known as Transcription Factor Binding Sites, are biological patterns of great interest. Motif Search algorithms identify the conserved motifs within a given set of DNA sequences. There are different versions of Motif Search Problem, such as Simple Motif Search, Planted Motif Search, Edited Motif Search, Quorum Motif Search. In this exercise, you are supposed to solve a simplified version of Edit-distance based Motif Search.
 
-# **TASK:**
+## **TASK:**
 
 Given to you are integers L and D and the alphabet set Σ {A, C, G, T}. Write a program to implement the following:
 
